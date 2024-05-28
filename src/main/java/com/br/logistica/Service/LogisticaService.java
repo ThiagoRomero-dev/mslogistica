@@ -39,6 +39,7 @@ public class LogisticaService {
     int i = 0;
 
     public String adicionarEntregador(EntregadorDTO dto){
+        try{
         Long pedidoId = dto.getIdPedido();
         Long entregadorId = dto.getIdEntregador();
         String url = "http://mspedidos:8083/api/pedidos/entregador/" + pedidoId + "/" + entregadorId;
@@ -51,9 +52,14 @@ public class LogisticaService {
             return "Entregador foi adicionado ao pedido";
         else
             return "O serviço retornou: "+response.getStatusCode().toString()+ " body: " + response.getBody();
+        }catch(Exception e ){
+            e.printStackTrace();
+            return e.getMessage();
+        }
     }
 
     public String alterarStatus(StatusPedidoEnum statusPedidoEnum, Long pedidoId){
+        try{
         String url = "http://mspedidos:8083/api/pedidos/" + pedidoId ;
 
         HttpHeaders headers = new HttpHeaders();
@@ -70,12 +76,16 @@ public class LogisticaService {
             return "Status foi alterado do pedido";
         else
             return "O serviço retornou: "+response.getStatusCode().toString()+ " body: " + response.getBody();
-        
+        }catch(Exception e ){
+            e.printStackTrace();
+            return e.getMessage();
+        }
     }
 
 
     private void gerarRelatorio(List<PedidoDTO> pedidos) throws JRException, IOException{
 
+        
         // Caminho do arquivo JRXML dentro da pasta resources
         String jrxmlFile = "relatorioPedidosPagos.jrxml";
 
@@ -103,6 +113,9 @@ public class LogisticaService {
     }
 
     public String processoRelatorio() throws JRException, IOException{
+
+        try{
+
         List<PedidoDTO> pedidos = new ArrayList<>();
 
         String url = "http://mspedidos:8083/api/pedidos/status/" +"PEDIDO_PAGO" ;
@@ -145,7 +158,11 @@ public class LogisticaService {
              }
          }
 
-         return "Foi gerado os relatorios e alterado os status dos pedidos";
+         return "Foi gerado os relatorios e alterado os status dos pedidos";}
+         catch(Exception e){
+            e.printStackTrace();
+            return e.getMessage();
+         }
     }
 
 
